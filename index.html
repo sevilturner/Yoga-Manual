@@ -121,28 +121,32 @@
             font-size: 0.75rem;
             font-weight: 600;
             margin-top: 0.75rem;
+            text-transform: uppercase;
         }
 
         .detail-item {
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.85rem;
             font-size: 0.875rem;
         }
 
         .detail-label {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-main);
             display: block;
             margin-bottom: 0.15rem;
+            text-transform: uppercase; /* Forces column names to be ALL CAPS */
+            font-size: 0.8rem;
+            letter-spacing: 0.025em;
         }
 
         .detail-value {
             color: var(--text-muted);
         }
 
-        /* --- Custom Color Classes --- */
-        .color-red { color: #DC2626 !important; font-weight: 500; }
-        .color-blue { color: #2563EB !important; font-weight: 500; }
-        .color-green { color: #059669 !important; font-weight: 500; }
+        /* --- Custom Color & Bold Classes --- */
+        .color-red { color: #DC2626 !important; font-weight: bold !important; }
+        .color-blue { color: #2563EB !important; font-weight: bold !important; }
+        .color-green { color: #059669 !important; font-weight: bold !important; }
 
         .error-message {
             text-align: center;
@@ -273,7 +277,7 @@
 
                 detailColumns.forEach(col => {
                     if (pose[col]) { 
-                        // Determine if this specific column needs a custom color class
+                        // Determine if this specific column needs a custom color/bold class
                         let customClass = "detail-value";
                         if (col === "Common Misalignment") customClass += " color-red";
                         if (col === "Prep Postures") customClass += " color-blue";
