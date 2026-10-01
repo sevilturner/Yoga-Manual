@@ -139,6 +139,11 @@
             color: var(--text-muted);
         }
 
+        /* --- Custom Color Classes --- */
+        .color-red { color: #DC2626 !important; font-weight: 500; }
+        .color-blue { color: #2563EB !important; font-weight: 500; }
+        .color-green { color: #059669 !important; font-weight: 500; }
+
         .error-message {
             text-align: center;
             color: #DC2626;
@@ -161,7 +166,6 @@
         <input type="text" id="searchInput" placeholder="Search by name, sanskrit, or muscle...">
         <select id="categoryFilter">
             <option value="All">All Categories</option>
-            <!-- Categories will be populated dynamically -->
         </select>
     </div>
 
@@ -172,7 +176,6 @@
     <script>
         let allPoses = [];
 
-        // Fetch the data from the local JSON file
         async function loadData() {
             try {
                 const response = await fetch('data.json');
@@ -195,7 +198,6 @@
             populateCategoryFilter();
             renderPoses(allPoses);
 
-            // Add event listeners for interactivity
             document.getElementById('searchInput').addEventListener('input', handleFilter);
             document.getElementById('categoryFilter').addEventListener('change', handleFilter);
         }
@@ -204,14 +206,12 @@
             const filterDropdown = document.getElementById('categoryFilter');
             const uniqueCategories = new Set();
 
-            // Extract all unique categories
             allPoses.forEach(pose => {
                 if (pose["Family / Category"]) {
                     uniqueCategories.add(pose["Family / Category"]);
                 }
             });
 
-            // Sort and append to dropdown
             Array.from(uniqueCategories).sort().forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
@@ -225,10 +225,7 @@
             const selectedCategory = document.getElementById('categoryFilter').value;
 
             const filteredPoses = allPoses.filter(pose => {
-                // Check category
                 const matchesCategory = selectedCategory === "All" || pose["Family / Category"] === selectedCategory;
-                
-                // Check search term across all text in the object
                 const poseValuesString = Object.values(pose).join(" ").toLowerCase();
                 const matchesSearch = poseValuesString.includes(searchTerm);
 
@@ -240,14 +237,13 @@
 
         function renderPoses(posesToRender) {
             const container = document.getElementById('poses-container');
-            container.innerHTML = ''; // Clear current contents
+            container.innerHTML = ''; 
 
             if (posesToRender.length === 0) {
                 container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6B7280;">No postures found matching your criteria.</p>';
                 return;
             }
 
-            // Columns we want to display in the body of the card (excluding Name, Sanskrit, and Category which go in the header)
             const detailColumns = [
                 "Alignment", 
                 "Key Actions", 
@@ -266,7 +262,6 @@
                 const card = document.createElement('div');
                 card.className = 'pose-card';
 
-                // Build Card Header
                 let cardHTML = `
                     <div class="pose-header">
                         <div class="pose-title">${pose["Posture Name"] || "Unknown Pose"}</div>
@@ -276,25 +271,29 @@
                     <div class="pose-body">
                 `;
 
-                // Build Card Details
                 detailColumns.forEach(col => {
-                    if (pose[col]) { // Only render if data exists
+                    if (pose[col]) { 
+                        // Determine if this specific column needs a custom color class
+                        let customClass = "detail-value";
+                        if (col === "Common Misalignment") customClass += " color-red";
+                        if (col === "Prep Postures") customClass += " color-blue";
+                        if (col === "Benefits") customClass += " color-green";
+
                         cardHTML += `
                             <div class="detail-item">
                                 <span class="detail-label">${col}:</span>
-                                <span class="detail-value">${pose[col]}</span>
+                                <span class="${customClass}">${pose[col]}</span>
                             </div>
                         `;
                     }
                 });
 
-                cardHTML += `</div>`; // Close pose-body
+                cardHTML += `</div>`;
                 card.innerHTML = cardHTML;
                 container.appendChild(card);
             });
         }
 
-        // Initialize the app on load
         loadData();
     </script>
 </body>
